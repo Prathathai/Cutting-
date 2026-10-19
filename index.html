@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตัดคลิป — ตัดต่อวิดีโอในเบราว์เซอร์</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&family=Kanit:wght@400;700&family=Mitr:wght@400;600&family=Sarabun:wght@400;700&family=Pridi:wght@400;600&family=Chonburi&family=Itim&family=Mali:wght@400;700&family=K2D:wght@400;800&family=Pattaya&family=Sriracha&family=Athiti:wght@400;700&family=Krub:wght@400;700&family=Bai+Jamjuree:wght@400;700&family=Taviraj:wght@400;700&family=Charm:wght@400;700&family=Maitree:wght@400;700&family=Chakra+Petch:wght@400;700&family=Kodchasan:wght@400;700&family=Niramit:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f0f6;--pn:#fff;--ink:#1d1a26;--mut:#6d687c;--ln:#dad6e3;--ac:#d92b6b;--on:#fff;--st:#0e0c13;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15121c;--pn:#1f1b29;--ink:#f1eef7;--mut:#9b95ad;--ln:#352f45;--ac:#ff5a93;--on:#1a0710}}
+:root[data-theme=dark]{--bg:#15121c;--pn:#1f1b29;--ink:#f1eef7;--mut:#9b95ad;--ln:#352f45;--ac:#ff5a93;--on:#1a0710}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;min-height:100%;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:14px/1.5 Prompt,"Noto Sans Thai",sans-serif}
+header{display:flex;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--ln)}
+h1{font:600 21px Mitr,Prompt,sans-serif;margin:0}.sp{flex:1}
+.b,.ch,.fb{font:inherit;color:var(--ink);background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:7px 12px;cursor:pointer}
+.b:focus-visible,.ch:focus-visible,.fb:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pri,.ch.on,.fb.on{background:var(--ac);border-color:var(--ac);color:var(--on)}
+main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto auto;align-content:start;gap:12px;padding:12px}
+#stage{background:var(--st);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px;min-height:360px}
+#cw{position:relative;flex:1;width:100%;display:flex;align-items:center;justify-content:center}
+#cv{max-width:100%;max-height:min(62dvh,640px);background:#000;border-radius:6px}
+#drop{position:absolute;inset:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;text-align:center;color:#e9e5f2;padding:20px;border:2px dashed #4a4358;border-radius:10px;font-size:13px}
+#drop b{font-size:18px}
+#bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;color:#cfc9dc}
+#tl{position:relative;height:86px;background:var(--pn);border:1px solid var(--ln);border-radius:10px;overflow:hidden;touch-action:none;cursor:pointer;background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(128,128,128,.14) 6px 7px)}
+.sg{position:absolute;top:8px;height:42px;background:var(--ac);opacity:.55;border-radius:5px;border:2px solid transparent}.sg.on{opacity:1;border-color:var(--ink)}
+.sg{font-size:11px;color:#fff;padding:2px 5px;overflow:hidden;white-space:nowrap}
+.sb{position:absolute;top:58px;height:18px;background:#ffd23f;border-radius:4px;opacity:.85}.sb.on{outline:2px solid var(--ink)}
+#ph{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);pointer-events:none}
+#tlh{font-size:12px;color:var(--mut);margin:6px 2px 0}
+#tlw{grid-column:1}
+#panel{grid-column:2;grid-row:1/3;background:var(--pn);border:1px solid var(--ln);border-radius:12px;max-height:calc(100dvh - 90px);overflow:auto}
+#tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--ln)}
+#tabs button{flex:1;font:inherit;color:var(--mut);background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;cursor:pointer;white-space:nowrap}
+#tabs button.on{color:var(--ink);border-color:var(--ac);font-weight:700}
+.tab{padding:12px;display:flex;flex-direction:column;gap:12px}
+.tab h3{margin:0;font-size:14px}.mut{color:var(--mut);font-size:12px;margin:0}
+.cs{display:flex;flex-wrap:wrap;gap:6px}.ch{padding:5px 10px}
+label{display:flex;align-items:center;gap:8px;justify-content:space-between}label input[type=range]{flex:1;max-width:200px;accent-color:var(--ac)}
+.ck{justify-content:flex-start}.cl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input[type=color]{width:36px;height:26px;padding:0;border:1px solid var(--ln);border-radius:6px;background:none}
+.row{border:1px solid var(--ln);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px}.row.on{border-color:var(--ac)}
+.tm{display:flex;gap:6px;align-items:center}.tm input{width:64px}
+input[type=number],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:5px 7px}
+textarea{width:100%;resize:vertical}.x{margin-left:auto;background:none;border:0;color:var(--mut);cursor:pointer;font-size:16px}
+#fonts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fb{text-align:left;display:flex;flex-direction:column;padding:8px 10px;min-height:68px}
+.fb span{font-size:20px;line-height:1.3;overflow:hidden;white-space:nowrap}.fb small{font-family:Prompt,sans-serif;font-size:11px;opacity:.75}
+#pg{height:8px;background:var(--bg);border-radius:6px;overflow:hidden}#pg i{display:block;height:100%;width:0;background:var(--ac)}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:20px;font-size:13px;z-index:9}
+@media(max-width:860px){main{grid-template-columns:minmax(0,1fr)}#panel{grid-column:1;grid-row:auto;max-height:none}}
+</style></head><body>
+<header><h1>ตัดคลิป</h1><span class="sp"></span>
+<button id="pick" class="b">+ เพิ่มวิดีโอ</button><input id="file" type="file" accept="video/*,audio/*" multiple hidden>
+<button id="goexp" class="b pri">ส่งออก</button></header>
+<main>
+<section id="stage"><div id="cw"><canvas id="cv" width="540" height="960"></canvas>
+<div id="drop"><b>วางไฟล์วิดีโอตรงนี้</b><span>หรือกด “เพิ่มวิดีโอ” ไฟล์ไม่ถูกอัปโหลดไปไหน ตัดต่อในเครื่องคุณทั้งหมด</span></div></div>
+<div id="bar"><button id="play" class="b">▶ เล่น</button><button id="split" class="b">✂ ตัดตรงนี้ (S)</button><button id="del" class="b">ลบช่วงที่เลือก</button><button id="mvl" class="b" title="ย้ายช่วงที่เลือกไปก่อนหน้า">◀</button><button id="mvr" class="b" title="ย้ายช่วงที่เลือกไปหลัง">▶</button><span id="time">0:00 / 0:00</span></div></section>
+<section id="tlw"><div id="tl"></div><p id="tlh">แถบชมพู = ช่วงที่เก็บไว้ (กดเลือกแล้วลบได้) · แถบเหลือง = ซับ · ลากเพื่อเลื่อนดู · Space เล่น/หยุด</p></section>
+<aside id="panel"><nav id="tabs"></nav>
+<div class="tab" id="t-sub">
+<div class="cs"><button id="addsub" class="b pri">+ เพิ่มซับตรงนี้</button><button id="srtb" class="b">นำเข้า .srt</button><input id="srt" type="file" accept=".srt" hidden></div>
+<button id="asub" class="b pri">✨ สร้างซับอัตโนมัติจากเสียง</button><p class="mut">ตัดต่อให้เสร็จก่อน แล้วค่อยสร้างซับ ถอดเสียงในเครื่องด้วย Whisper ไม่ต้องใช้ไมโครโฟน ครั้งแรกต้องออนไลน์เพื่อโหลดโมเดลประมาณ 200 MB หลังจากนั้นเร็วขึ้น</p><div id="sublist"></div>
+<h3>สไตล์สำเร็จรูป</h3><div class="cs" id="pre"></div>
+<h3>ปรับแต่ง</h3>
+<label>ขนาด<input type="range" min="24" max="90" data-k="size"></label>
+<label>ตำแหน่งแนวตั้ง<input type="range" min="10" max="95" data-k="pos"></label>
+<label>ความหนาขอบ<input type="range" min="0" max="14" data-k="strokeW"></label>
+<div class="cl"><label>ตัวอักษร<input type="color" data-k="color"></label><label>ขอบ<input type="color" data-k="stroke"></label><label>ไฮไลต์<input type="color" data-k="hlColor"></label><label>กล่อง<input type="color" data-k="boxColor"></label></div>
+<label class="ck"><input type="checkbox" data-k="hl"> ไฮไลต์คำตามจังหวะพูด</label>
+<label class="ck"><input type="checkbox" data-k="pop"> ซับเด้งตอนขึ้น</label>
+<label class="ck"><input type="checkbox" data-k="box"> พื้นหลังกล่อง</label>
+</div>
+<div class="tab" id="t-font" hidden><div class="cs" id="fcat"></div><div id="fonts"></div>
+<button id="ufb" class="b">อัปโหลดฟอนต์ของคุณ (.ttf / .otf)</button><input id="ufont" type="file" accept=".ttf,.otf,.woff,.woff2" hidden></div>
+<div class="tab" id="t-fx" hidden>
+<h3>ตัวช่วยรอยต่อ</h3>
+<button id="smooth" class="b pri">ทำให้ลื่นทั้งคลิป</button>
+<p class="mut">ตัดช่วงเงียบ + ซูมสลับทุกช่วง + เสียงค่อยๆ เข้า/ออกตรงรอยตัด</p>
+<button id="acut" class="b">ตัดช่วงเงียบอัตโนมัติ</button>
+<label class="ck"><input type="checkbox" data-k="alt"> ซูมสลับ 100% / 112% (แก้ Jump Cut)</label>
+<label class="ck"><input type="checkbox" data-k="fade"> เสียงค่อยๆ เข้า/ออกตรงรอยตัด</label>
+<h3>ฟิลเตอร์สี</h3><div class="cs" id="fil"></div>
+<h3>ความเร็ว</h3><div class="cs" id="spd"></div>
+<h3>สัดส่วนภาพ</h3><div class="cs" id="rat"></div>
+<h3>การวางภาพ</h3><div class="cs" id="fit"></div></div>
+<div class="tab" id="t-au" hidden>
+<label class="ck"><input type="checkbox" data-k="mute"> ปิดเสียงต้นฉบับ</label>
+<label>ความดัง<input type="range" min="0" max="1.5" step=".05" data-k="vol"></label>
+<button id="aexp" class="b pri">ส่งออกเฉพาะเสียง</button>
+<p class="mut">ได้ไฟล์เสียงล้วน (.webm) จากช่วงที่เก็บไว้ ใช้เป็นเสียงในโปรเจกต์อื่นได้ ส่วนการแยกเสียงพูด/ดนตรีด้วย AI ยังไม่มีในเวอร์ชันนี้</p></div>
+<div class="tab" id="t-ex" hidden>
+<h3>คุณภาพ</h3><div class="cs" id="qua"></div>
+<button id="vexp" class="b pri">ส่งออกวิดีโอ</button><div id="pg"><i></i></div>
+<p class="mut">ระบบบันทึกแบบเรียลไทม์ ความยาวไฟล์เท่ากับเวลาที่เล่น เปิดหน้านี้ค้างไว้จนเสร็จ ใช้ Chrome หรือ Edge จะได้ผลดีที่สุด</p></div>
+</aside></main>
+<div id="toast" hidden></div>
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),cx=cv.getContext('2d'),tl=$('#tl');
+const FONTS=[['Prompt','เรียบ'],['Kanit','ตัวหนา'],['Mitr','ตัวหนา'],['Sarabun','เรียบ'],['Pridi','หรู'],['Chonburi','หรู'],['Itim','ลายมือ'],['Mali','น่ารัก'],['K2D','เรียบ'],['Pattaya','ตัวหนา'],['Sriracha','ลายมือ'],['Athiti','เรียบ'],['Krub','เรียบ'],['Bai Jamjuree','เรียบ'],['Taviraj','หรู'],['Charm','ลายมือ'],['Maitree','หรู'],['Chakra Petch','ตัวหนา'],['Kodchasan','น่ารัก'],['Niramit','เรียบ']];
+const FIL={'ปกติ':'none','อุ่น':'sepia(.25) saturate(1.3) hue-rotate(-10deg)','เย็น':'saturate(1.1) hue-rotate(15deg) brightness(1.03)','ขาวดำ':'grayscale(1)','สดจัด':'saturate(1.7) contrast(1.1)','วินเทจ':'sepia(.5) contrast(.9) brightness(1.05)','คอนทราสต์':'contrast(1.35) brightness(.95)'};
+const RAT={'9:16':[540,960],'4:5':[540,675],'1:1':[540,540],'16:9':[960,540]};
+const PRE={'สายคอนเทนต์':{font:'Kanit',size:46,color:'#ffffff',stroke:'#000000',strokeW:8,box:false,hl:true,hlColor:'#ffd23f',pop:true,pos:78},
+'สายตลก':{font:'Mitr',size:52,color:'#ffe14d',stroke:'#d1204a',strokeW:9,box:false,hl:false,pop:true,pos:70},
+'มินิมอล':{font:'Prompt',size:34,color:'#ffffff',stroke:'#000000',strokeW:0,box:true,boxColor:'#000000',hl:false,pop:false,pos:86},
+'น่ารัก':{font:'Mali',size:42,color:'#ffffff',stroke:'#ff5a93',strokeW:9,box:false,hl:false,pop:true,pos:76}};
+const S={segs:[],sel:0,subs:[],selSub:-1,font:'Kanit',size:46,color:'#ffffff',stroke:'#000000',strokeW:8,box:false,boxColor:'#000000',hl:true,hlColor:'#ffd23f',pop:true,pos:78,filter:'ปกติ',speed:1,ratio:'16:9',fit:'cover',alt:false,fade:false,mute:false,vol:1,q:5e6,cat:'ทั้งหมด',pre:'',playing:false,exp:false,cur:0};
+let CL=[],actx,gain,adest;
+const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
+let tt;function toast(m){const e=$('#toast');e.textContent=m;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2600)}
+const segAt=t=>S.segs.findIndex(g=>t>=g.s-.03&&t<g.e);
+function chips(id,key,items,cb){const el=$(id),r=()=>{el.innerHTML='';items.forEach(([l,val])=>{const b=document.createElement('button');b.className='ch'+(S[key]===val?' on':'');b.textContent=l;b.onclick=()=>{S[key]=val;r();cb&&cb()};el.append(b)})};r()}
+/* tabs */
+[['t-sub','ซับ'],['t-font','ฟอนต์'],['t-fx','เอฟเฟกต์'],['t-au','เสียง'],['t-ex','ส่งออก']].forEach(([id,l],i)=>{const b=document.createElement('button');b.textContent=l;b.dataset.t=id;b.onclick=()=>tab(id);if(!i)b.className='on';$('#tabs').append(b)});
+function tab(id){document.querySelectorAll('.tab').forEach(e=>e.hidden=e.id!==id);document.querySelectorAll('#tabs button').forEach(b=>b.className=b.dataset.t===id?'on':'')}
+$('#goexp').onclick=()=>tab('t-ex');
+/* controls */
+document.querySelectorAll('[data-k]').forEach(e=>e.oninput=()=>{S[e.dataset.k]=e.type==='checkbox'?e.checked:e.type==='range'?+e.value:e.value;applyVol();rTL()});
+function syncUI(){document.querySelectorAll('[data-k]').forEach(e=>{const k=e.dataset.k;e.type==='checkbox'?e.checked=S[k]:e.value=S[k]});rFonts();rTL()}
+function applyVol(){if(gain&&!S.exp&&!S.playing)gain.gain.value=S.mute?0:S.vol}
+chips('#pre','pre',Object.keys(PRE).map(k=>[k,k]),()=>{Object.assign(S,PRE[S.pre]);syncUI()});
+chips('#fil','filter',Object.keys(FIL).map(k=>[k,k]));
+chips('#spd','speed',[['0.5×',.5],['1×',1],['1.5×',1.5],['2×',2]],()=>{const a=av();if(a)a.playbackRate=S.speed});
+chips('#rat','ratio',Object.keys(RAT).map(k=>[k,k]),()=>[cv.width,cv.height]=RAT[S.ratio]);
+chips('#fit','fit',[['เต็มจอ (ครอป)','cover'],['พอดีจอ','contain']]);
+chips('#qua','q',[['ประหยัด',2.5e6],['ปกติ',5e6],['ชัด',9e6]]);
+chips('#fcat','cat',['ทั้งหมด','เรียบ','ตัวหนา','หรู','น่ารัก','ลายมือ'].map(k=>[k,k]),()=>rFonts());
+function rFonts(){const g=$('#fonts');g.innerHTML='';const txt=(S.subs[S.selSub]?.t||'สวัสดี ตัดคลิปง่ายนิดเดียว').slice(0,16);
+FONTS.filter(f=>S.cat==='ทั้งหมด'||f[1]===S.cat).forEach(([n])=>{const b=document.createElement('button');b.className='fb'+(n===S.font?' on':'');b.innerHTML=`<span></span><small>${n}</small>`;b.firstChild.textContent=txt;b.firstChild.style.fontFamily=`"${n}",sans-serif`;b.onclick=()=>{S.font=n;document.fonts.load(`700 40px "${n}"`,'ก');rFonts()};g.append(b)})}
+$('#ufb').onclick=()=>$('#ufont').click();
+$('#ufont').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const n='ของฉัน '+FONTS.length,ff=new FontFace(n,await f.arrayBuffer());await ff.load();document.fonts.add(ff);FONTS.unshift([n,'ของฉัน']);S.font=n;S.cat='ทั้งหมด';chips('#fcat','cat',['ทั้งหมด','เรียบ','ตัวหนา','หรู','น่ารัก','ลายมือ'].map(k=>[k,k]),rFonts);rFonts()}catch(_){toast('อ่านไฟล์ฟอนต์ไม่ได้')}};
+/* load video */
+$('#pick').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{load([...e.target.files]);e.target.value=''};
+$('#stage').ondragover=e=>e.preventDefault();$('#stage').ondrop=e=>{e.preventDefault();load([...e.dataTransfer.files])};
+const dur=g=>g.e-g.s,offs=i=>S.segs.slice(0,i).reduce((a,g)=>a+dur(g),0),total=()=>offs(S.segs.length),av=()=>S.segs[S.cur]&&CL[S.segs[S.cur].c].v;
+const now=()=>{const g=S.segs[S.cur];return g?offs(S.cur)+Math.max(0,Math.min(dur(g),av().currentTime-g.s)):0};
+function hook(c){if(actx&&!c.h){actx.createMediaElementSource(c.v).connect(gain);c.h=1}}
+async function load(fs){fs=fs.filter(f=>/^(video|audio)/.test(f.type));if(!fs.length)return;toast('กำลังโหลด…');
+for(const f of fs){const el=document.createElement('video');el.playsInline=true;el.preload='auto';el.hidden=true;el.src=URL.createObjectURL(f);document.body.append(el);
+try{await new Promise((ok,no)=>{el.onloadedmetadata=ok;el.onerror=no})}catch(_){toast('เปิดไฟล์ '+f.name+' ไม่ได้');continue}
+const c={file:f,v:el,dur:el.duration};CL.push(c);hook(c);S.segs.push({c:CL.length-1,s:0,e:c.dur})}
+$('#drop').hidden=true;rTL();toast(`มี ${CL.length} คลิปในโปรเจกต์`)}
+/* timeline */
+function setCur(i,t){const o=av(),was=S.playing;S.cur=i;const n=av();if(o&&o!==n)o.pause();n.currentTime=t;if(was&&o!==n){n.playbackRate=S.speed;n.play()}}
+function seek(g){let i=0,o=0;while(i<S.segs.length-1&&g>=o+dur(S.segs[i])){o+=dur(S.segs[i]);i++}setCur(i,S.segs[i].s+Math.max(0,g-o))}
+function rTL(){const D=total()||1;let h='',o=0;S.segs.forEach((g,i)=>{h+=`<i class="sg${i===S.sel?' on':''}" style="left:${o/D*100}%;width:${dur(g)/D*100}%">${CL.length>1?g.c+1:''}${S.alt&&i%2?' ซูม':''}</i>`;o+=dur(g)});
+S.subs.forEach((s,i)=>h+=`<b class="sb${i===S.selSub?' on':''}" style="left:${s.a/D*100}%;width:${Math.max(.6,(s.b-s.a)/D*100)}%"></b>`);tl.innerHTML=h+'<u id="ph"></u>'}
+function mv(e){const D=total();if(!D)return;const r=tl.getBoundingClientRect();seek(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*D);if(S.cur!==S.sel){S.sel=S.cur;rTL()}}
+tl.onpointerdown=e=>{tl.setPointerCapture(e.pointerId);mv(e);tl.onpointermove=mv};tl.onpointerup=()=>tl.onpointermove=null;
+function split(){if(!S.segs.length)return;const i=S.cur,g=S.segs[i],t=av().currentTime;if(t-g.s<.1||g.e-t<.1)return;S.segs.splice(i,1,{c:g.c,s:g.s,e:t},{c:g.c,s:t,e:g.e});S.cur=i+1;S.sel=i+1;rTL()}
+function del(){if(S.segs.length<2)return toast('ต้องเหลืออย่างน้อย 1 ช่วง');stop();S.segs.splice(S.sel,1);S.sel=Math.min(S.sel,S.segs.length-1);setCur(S.sel,S.segs[S.sel].s);rTL()}
+function move(d){const i=S.sel,j=i+d;if(j<0||j>=S.segs.length)return;stop();[S.segs[i],S.segs[j]]=[S.segs[j],S.segs[i]];S.sel=j;setCur(j,S.segs[j].s);rTL()}
+$('#split').onclick=split;$('#del').onclick=del;$('#mvl').onclick=()=>move(-1);$('#mvr').onclick=()=>move(1);$('#play').onclick=()=>S.playing?stop():play();
+addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();S.playing?stop():play()}else if(e.code==='KeyS')split();else if(e.code==='Delete'||e.code==='Backspace')del()});
+/* subtitles */
+function rSubs(){const L=$('#sublist');L.innerHTML=S.subs.length?'':'<p class="mut">ยังไม่มีซับ เลื่อนไทม์ไลน์ไปจุดที่พูด แล้วกด “เพิ่มซับตรงนี้”</p>';
+S.subs.forEach((s,i)=>{const d=document.createElement('div');d.className='row'+(i===S.selSub?' on':'');d.innerHTML='<div class="tm"><input type="number" step=".1" min="0"><span>→</span><input type="number" step=".1" min="0"><button class="x" title="ลบซับ">✕</button></div><textarea rows="2"></textarea>';
+const [a,b]=d.querySelectorAll('input'),ta=d.querySelector('textarea');a.value=s.a.toFixed(1);b.value=s.b.toFixed(1);ta.value=s.t;
+ta.oninput=()=>{s.t=ta.value};a.oninput=()=>{s.a=+a.value;rTL()};b.oninput=()=>{s.b=+b.value;rTL()};
+ta.onfocus=()=>{S.selSub=i;seek(s.a+.01);rTL()};d.querySelector('.x').onclick=()=>{S.subs.splice(i,1);S.selSub=-1;rSubs();rTL()};L.append(d)})}
+$('#addsub').onclick=()=>{if(!S.segs.length)return toast('เลือกวิดีโอก่อน');const a=now();S.subs.push({a,b:Math.min(total(),a+2),t:'พิมพ์ข้อความซับ'});S.subs.sort((x,y)=>x.a-y.a);S.selSub=S.subs.findIndex(s=>s.a===a);rSubs();rTL();document.querySelectorAll('#sublist textarea')[S.selSub]?.focus()};
+$('#srtb').onclick=()=>$('#srt').click();
+$('#srt').onchange=async e=>{const f=e.target.files[0];if(!f)return;const T=s=>{const m=s.match(/(\d+):(\d+):(\d+)[,.](\d+)/);return +m[1]*3600+ +m[2]*60+ +m[3]+ +('0.'+m[4])};
+S.subs=(await f.text()).replace(/\r/g,'').split(/\n\n+/).map(b=>{const l=b.trim().split('\n'),i=l.findIndex(x=>x.includes('-->'));if(i<0)return null;const [p,q]=l[i].split('-->');return{a:T(p),b:T(q),t:l.slice(i+1).join('\n')}}).filter(Boolean);e.target.value='';S.selSub=-1;rSubs();rTL();toast(`นำเข้าซับ ${S.subs.length} บรรทัด`)};
+const seg=window.Intl&&Intl.Segmenter?new Intl.Segmenter('th',{granularity:'word'}):null;
+const words=t=>seg?[...seg.segment(t)].map(x=>x.segment):t.split(/(?<= )/);
+function drawSub(x,W,H,t){const s=S.subs.find(a=>t>=a.a&&t<a.b);if(!s||!s.t.trim())return;
+const u=Math.min(W,H)/540,fs=S.size*u,lh=fs*1.3;x.font=`700 ${fs}px "${S.font}",sans-serif`;x.textBaseline='middle';x.textAlign='left';x.lineJoin='round';
+const lines=[];s.t.split('\n').forEach(p=>{let l=[];words(p).forEach(w=>{if(l.length&&x.measureText(l.join('')+w).width>W*.88){lines.push(l);l=[];if(!w.trim())return}l.push(w)});if(l.length)lines.push(l)});
+const N=lines.flat().filter(w=>w.trim()).length,hi=S.hl?Math.min(N-1,Math.floor((t-s.a)/(s.b-s.a)*N)):-1;
+const p=Math.min(1,(t-s.a)/.18),sc=S.pop?.7+.3*p+.12*Math.sin(p*Math.PI):1,y0=-(lines.length-1)*lh/2;
+x.save();x.translate(W/2,H*S.pos/100);x.scale(sc,sc);
+if(S.box){const mw=Math.max(...lines.map(l=>x.measureText(l.join('')).width));x.globalAlpha=.65;x.fillStyle=S.boxColor;x.beginPath();(x.roundRect||x.rect).call(x,-mw/2-fs*.4,y0-lh/2-fs*.1,mw+fs*.8,lines.length*lh+fs*.2,fs*.3);x.fill();x.globalAlpha=1}
+let k=0;lines.forEach((l,i)=>{let px=-x.measureText(l.join('')).width/2;const y=y0+i*lh;l.forEach(w=>{const on=w.trim()&&k++===hi;if(S.strokeW>0){x.strokeStyle=S.stroke;x.lineWidth=S.strokeW*u;x.strokeText(w,px,y)}x.fillStyle=on?S.hlColor:S.color;x.fillText(w,px,y);px+=x.measureText(w).width})});x.restore()}
+/* render + playback */
+function draw(){const W=cv.width,H=cv.height,a=av();cx.fillStyle='#000';cx.fillRect(0,0,W,H);
+if(a&&a.videoWidth){const z=S.alt&&S.cur%2?1.12:1,sc=Math[S.fit==='cover'?'max':'min'](W/a.videoWidth,H/a.videoHeight)*z,w=a.videoWidth*sc,h=a.videoHeight*sc;cx.filter=FIL[S.filter];cx.drawImage(a,(W-w)/2,(H-h)/2,w,h);cx.filter='none'}
+drawSub(cx,W,H,now())}
+function ensureAudio(){if(!actx){actx=new AudioContext();gain=actx.createGain();adest=actx.createMediaStreamDestination();gain.connect(actx.destination);gain.connect(adest);CL.forEach(hook)}actx.resume()}
+async function play(){if(!S.segs.length)return;ensureAudio();const g=S.segs[S.cur],a=av();if(S.cur===S.segs.length-1&&a.currentTime>=g.e-.05)setCur(0,S.segs[0].s);else if(a.currentTime<g.s-.03||a.currentTime>=g.e)a.currentTime=g.s;
+const b=av();b.playbackRate=S.speed;S.playing=true;$('#play').textContent='❚❚ หยุด';try{await b.play()}catch(_){stop()}}
+function stop(){S.playing=false;const a=av();if(a)a.pause();$('#play').textContent='▶ เล่น';if(S.onend){const f=S.onend;S.onend=null;f()}}
+function tick(){const g=S.segs[S.cur],a=av();if(!g)return;const t=a.currentTime;
+if(t>=g.e-.02||a.ended){if(S.cur+1>=S.segs.length)return stop();const n=S.segs[S.cur+1];if(n.c===g.c&&Math.abs(n.s-g.e)<.05)S.cur++;else{a.pause();S.cur++;const b=av();b.currentTime=n.s;b.playbackRate=S.speed;b.play()}return}
+if(gain)gain.gain.value=S.mute?0:S.vol*(S.fade?Math.min(1,Math.min(t-g.s,g.e-t)/.08):1);
+if(S.exp)$('#pg i').style.width=Math.min(100,now()/total()*100)+'%'}
+function loop(){if(S.playing)tick();draw();const p=$('#ph'),D=total();if(p&&D)p.style.left=now()/D*100+'%';$('#time').textContent=fmt(now())+' / '+fmt(D);requestAnimationFrame(loop)}
+/* silence cut */
+async function silence(f){const b=await actx.decodeAudioData(await f.arrayBuffer()),d=b.getChannelData(0),w=Math.floor(b.sampleRate*.05),L=[];
+for(let i=0;i+w<=d.length;i+=w){let s=0;for(let j=i;j<i+w;j+=8)s+=d[j]*d[j];L.push(Math.sqrt(s/(w/8)))}
+const out=[];let st=-1,gap=0;L.forEach((x,i)=>{if(x>.02){if(st<0)st=i;gap=0}else if(st>=0&&++gap>=8){out.push([st,i-gap+1]);st=-1;gap=0}});if(st>=0)out.push([st,L.length]);
+return out.map(([a,e])=>[Math.max(0,(a-2)*.05),(e+2)*.05])}
+async function autoCut(){if(!CL.length)return toast('เลือกวิดีโอก่อน');toast('กำลังหาช่วงเงียบ…');ensureAudio();stop();const segs=[];
+for(let c=0;c<CL.length;c++){try{(await silence(CL[c].file)).forEach(([s,e])=>segs.push({c,s,e:Math.min(e,CL[c].dur)}))}catch(_){segs.push({c,s:0,e:CL[c].dur})}}
+if(!segs.length)return toast('ไม่พบช่วงที่มีเสียงพูด');S.segs=segs;S.sel=0;setCur(0,segs[0].s);rTL();toast(`ตัดช่วงเงียบแล้ว เหลือ ${segs.length} ช่วง`)}
+$('#acut').onclick=autoCut;
+$('#smooth').onclick=async()=>{await autoCut();S.alt=true;S.fade=true;syncUI()};
+/* auto subtitles */
+function chunk(t){const o=[];let l='';words(t).forEach(w=>{if((l+w).length>22&&l.trim()){o.push(l.trim());l=''}l+=w});if(l.trim())o.push(l.trim());return o}
+let ASR;
+async function pcm(c){if(c.pcm)return c.pcm;const b=await actx.decodeAudioData(await c.file.arrayBuffer()),o=new OfflineAudioContext(1,Math.ceil(b.duration*16000),16000),s=o.createBufferSource();s.buffer=b;s.connect(o.destination);s.start();c.pcm=(await o.startRendering()).getChannelData(0);return c.pcm}
+async function autoSub(){if(!S.segs.length)return toast('เลือกวิดีโอก่อน');if(S.asr)return;S.asr=1;const btn=$('#asub');
+try{ensureAudio();stop();toast('กำลังเตรียมเสียง…');
+const parts=[];for(const g of S.segs){const p=await pcm(CL[g.c]);parts.push(p.subarray(Math.floor(g.s*16000),Math.floor(g.e*16000)))}
+const all=new Float32Array(parts.reduce((x,p)=>x+p.length,0));let o=0;parts.forEach(p=>{all.set(p,o);o+=p.length});
+if(!ASR){btn.textContent='กำลังโหลดโมเดล…';const {pipeline}=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2');
+ASR=await pipeline('automatic-speech-recognition','Xenova/whisper-small',{progress_callback:q=>{if(q.status==='progress')btn.textContent=`กำลังโหลดโมเดล ${Math.round(q.progress)}% (โหลดครั้งแรกครั้งเดียว)`}})}
+btn.textContent='กำลังถอดเสียง… รอสักครู่';
+const r=await ASR(all,{language:'thai',task:'transcribe',return_timestamps:true,chunk_length_s:30,stride_length_s:5});
+S.subs=[];(r.chunks||[]).forEach(c=>{const t=c.text.trim();if(!t)return;const a=c.timestamp[0]||0,b=c.timestamp[1]||a+2,cs=chunk(t),n=cs.reduce((x,y)=>x+y.length,0);let s=a;cs.forEach(k=>{const e=s+(b-a)*k.length/n;S.subs.push({a:s,b:e,t:k});s=e})});
+S.selSub=-1;rSubs();rTL();toast(`สร้างซับ ${S.subs.length} บรรทัด ตรวจและแก้คำได้เลย`)}
+catch(e){console.error(e);toast('ถอดเสียงไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่')}
+btn.textContent='✨ สร้างซับอัตโนมัติจากเสียง';S.asr=0}
+$('#asub').onclick=autoSub;
+/* export */
+async function save(blob,name){try{const d=window.claude&&await claude.use('downloads');if(d){await d.save({filename:name,data:blob});return}}catch(e){if(e&&e.code==='declined')return}
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+async function exp(ao){if(!S.segs.length)return toast('เลือกวิดีโอก่อน');ensureAudio();stop();
+const st=ao?new MediaStream():cv.captureStream(30);adest.stream.getAudioTracks().forEach(t=>st.addTrack(t));
+const mime=(ao?['audio/webm;codecs=opus','audio/webm']:['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']).find(t=>MediaRecorder.isTypeSupported(t));
+if(!mime)return toast('เบราว์เซอร์นี้ส่งออกไม่ได้ ลองใช้ Chrome หรือ Edge');
+const rec=new MediaRecorder(st,{mimeType:mime,videoBitsPerSecond:S.q}),ch=[];rec.ondataavailable=e=>e.data.size&&ch.push(e.data);const done=new Promise(r=>rec.onstop=r);
+S.exp=true;tab('t-ex');setCur(0,S.segs[0].s);await new Promise(r=>setTimeout(r,400));
+rec.start();S.onend=()=>rec.stop();toast('กำลังส่งออก…');await play();await done;S.exp=false;$('#pg i').style.width='100%';
+await save(new Blob(ch,{type:mime}),ao?'audio.webm':'clip.webm')}
+$('#vexp').onclick=()=>exp(false);$('#aexp').onclick=()=>exp(true);
+[cv.width,cv.height]=RAT[S.ratio];syncUI();rSubs();loop();
+</script></body></html>
